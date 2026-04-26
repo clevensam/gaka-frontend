@@ -1,0 +1,208 @@
+
+import React from 'react';
+
+export const SearchIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+  </svg>
+);
+
+export const DownloadIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  </svg>
+);
+
+export const ViewIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+
+export const ShareIcon = ({ className = "w-4 h-4" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+  </svg>
+);
+
+export const BookOpenIcon = ({ className = "w-6 h-6" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.75 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.75 0-3.332.477-4.5 1.253" />
+  </svg>
+);
+
+export const FileIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+);
+
+export const ChevronRightIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+  </svg>
+);
+
+export const BackIcon = ({ className = "w-6 h-6" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+  </svg>
+);
+
+export const UserIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  </svg>
+);
+
+export const MailIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+  </svg>
+);
+
+export const LockIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+  </svg>
+);
+
+export const LogoutIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+  </svg>
+);
+
+export const PlusIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+);
+
+export const EditIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+  </svg>
+);
+
+export const TrashIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+  </svg>
+);
+
+export const BookmarkIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+  </svg>
+);
+
+export const BookmarkFilledIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="currentColor" viewBox="0 0 24 24" className={className}>
+    <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+  </svg>
+);
+
+export const MenuIcon = ({ className = "w-6 h-6" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+  </svg>
+);
+
+export const CloseIcon = ({ className = "w-6 h-6" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
+export const CalendarIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+export const TagIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+  </svg>
+);
+
+export const MessageSquareIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+  </svg>
+);
+
+export const HeartIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+  </svg>
+);
+
+export const SendIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+  </svg>
+);
+
+export const MaximizeIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+  </svg>
+);
+
+export const XIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+
+export const ArrowLeftIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+  </svg>
+);
+
+export const SaveIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+  </svg>
+);
+
+export const EyeIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+  </svg>
+);
+
+export const ImageIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+export const GlobeIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+  </svg>
+);
+
+export const CheckIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  </svg>
+);
+
+export const FilterIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+  </svg>
+);
+
+export const ArrowRightIcon = ({ className = "w-5 h-5" }) => (
+  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" className={className}>
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+  </svg>
+);

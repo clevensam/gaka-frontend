@@ -47,111 +47,111 @@ async function request<T>(
 
 export const api = {
   health: {
-    check: () => request<{ status: string; timestamp: string }>('/api/health'),
-    detailed: () => request<{ status: string; services: { supabase: string; gemini: boolean } }>('/api/health/detailed'),
+    check: () => request<{ status: string; timestamp: string }>('/health'),
+    detailed: () => request<{ status: string; services: { supabase: string; gemini: boolean } }>('/health/detailed'),
   },
 
   auth: {
     register: (data: { username: string; password: string; fullName: string; email: string; avatarUrl?: string }) =>
-      request<{ user: Profile; token: string }>('/api/auth/register', {
+      request<{ user: Profile; token: string }>('/auth/register', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
     login: (data: { username: string; password: string }) =>
-      request<{ user: Profile; token: string }>('/api/auth/login', {
+      request<{ user: Profile; token: string }>('/auth/login', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
-    me: () => request<{ user: Profile }>('/api/auth/me'),
+    me: () => request<{ user: Profile }>('/auth/me'),
   },
 
   chat: {
     send: (data: { messages: any[]; systemInstruction?: string }) =>
-      request<{ text: string; user?: any }>('/api/chat', {
+      request<{ text: string; user?: any }>('/chat', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
   },
 
   blog: {
-    getPosts: () => request<{ posts: BlogPost[] }>('/api/blog/posts'),
+    getPosts: () => request<{ posts: BlogPost[] }>('/blog/posts'),
 
     getPost: (id: string) =>
-      request<{ post: BlogPost & { comments: any[]; likes_count: number } }>(`/api/blog/posts/${id}`),
+      request<{ post: BlogPost & { comments: any[]; likes_count: number } }>(`/blog/posts/${id}`),
 
     createPost: (data: { title: string; content: string; cover_image?: string; tags?: string[] }) =>
-      request<{ post: BlogPost }>('/api/blog/posts', {
+      request<{ post: BlogPost }>('/blog/posts', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
     updatePost: (id: string, data: { title?: string; content?: string; cover_image?: string; tags?: string[] }) =>
-      request<{ post: BlogPost }>(`/api/blog/posts/${id}`, {
+      request<{ post: BlogPost }>(`/blog/posts/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
       }),
 
     deletePost: (id: string) =>
-      request<{ success: boolean }>(`/api/blog/posts/${id}`, {
+      request<{ success: boolean }>(`/blog/posts/${id}`, {
         method: 'DELETE',
       }),
 
     getComments: (postId: string) =>
-      request<{ comments: any[] }>(`/api/blog/comments/comments/${postId}`),
+      request<{ comments: any[] }>(`/blog/comments/comments/${postId}`),
 
     createComment: (data: { post_id: string; content: string }) =>
-      request<{ comment: any }>('/api/blog/comments/comments', {
+      request<{ comment: any }>('/blog/comments/comments', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
     deleteComment: (id: string) =>
-      request<{ success: boolean }>(`/api/blog/comments/comments/${id}`, {
+      request<{ success: boolean }>(`/blog/comments/comments/${id}`, {
         method: 'DELETE',
       }),
 
     toggleLike: (data: { post_id: string }) =>
-      request<{ liked: boolean }>('/api/blog/likes/toggle', {
+      request<{ liked: boolean }>('/blog/likes/toggle', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
     checkLike: (postId: string) =>
-      request<{ liked: boolean }>(`/api/blog/likes/check/${postId}`),
+      request<{ liked: boolean }>(`/blog/likes/check/${postId}`),
   },
 
   modules: {
-    getAll: () => request<{ modules: any[] }>('/api/modules'),
+    getAll: () => request<{ modules: any[] }>('/modules'),
 
     getById: (id: string) =>
-      request<{ module: any; resources: any[] }>(`/api/modules/${id}`),
+      request<{ module: any; resources: any[] }>(`/modules/${id}`),
   },
 
   resources: {
     getAll: (moduleId?: string) =>
       request<{ resources: any[] }>(
-        moduleId ? `/api/resources?module_id=${moduleId}` : '/api/resources'
+        moduleId ? `/resources?module_id=${moduleId}` : '/resources'
       ),
 
     getById: (id: string) =>
-      request<{ resource: any }>(`/api/resources/${id}`),
+      request<{ resource: any }>(`/resources/${id}`),
 
     create: (data: { title: string; type: string; view_url?: string; download_url?: string; module_id: string }) =>
-      request<{ resource: any }>('/api/resources', {
+      request<{ resource: any }>('/resources', {
         method: 'POST',
         body: JSON.stringify(data),
       }),
 
     update: (id: string, data: { title?: string; type?: string; view_url?: string; download_url?: string; module_id?: string }) =>
-      request<{ resource: any }>(`/api/resources/${id}`, {
+      request<{ resource: any }>(`/resources/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
       }),
 
     delete: (id: string) =>
-      request<{ success: boolean }>(`/api/resources/${id}`, {
+      request<{ success: boolean }>(`/resources/${id}`, {
         method: 'DELETE',
       }),
   },

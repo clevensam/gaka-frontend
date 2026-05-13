@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS public.modules (
   code TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
   description TEXT,
+  year INTEGER,
+  semester INTEGER,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

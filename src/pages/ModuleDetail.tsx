@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackIcon, PlusIcon } from '../components/shared/Icons';
+import { BackIcon, PlusIcon, EditIcon, TrashIcon } from '../components/shared/Icons';
 import { Module, ResourceType, AcademicFile, Profile } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
 
@@ -8,6 +8,8 @@ interface ModuleDetailProps {
   onBack: () => void;
   profile: Profile | null;
   openAddModal: () => void;
+  openEditModuleModal: () => void;
+  handleDeleteModule: () => void;
   filterType: ResourceType | 'All';
   setFilterType: (type: ResourceType | 'All') => void;
   filteredResources: AcademicFile[];
@@ -19,6 +21,8 @@ export const ModuleDetail: React.FC<ModuleDetailProps> = ({
   onBack,
   profile,
   openAddModal,
+  openEditModuleModal,
+  handleDeleteModule,
   filterType,
   setFilterType,
   filteredResources,
@@ -34,7 +38,19 @@ export const ModuleDetail: React.FC<ModuleDetailProps> = ({
         <button onClick={onBack} className="flex items-center text-slate-600 dark:text-white/40 font-black text-[10px] sm:text-[12px] uppercase tracking-widest hover:text-emerald-600 transition-colors">
           <BackIcon className="mr-2 sm:mr-3 w-5 h-5" /> Back to Modules
         </button>
-        {profile?.role === 'admin' && <button onClick={openAddModal} className="flex items-center space-x-1.5 bg-emerald-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-black text-[9px] sm:text-[11px] uppercase tracking-widest shadow-lg active:scale-95 transition-all"><PlusIcon className="w-4 h-4" /><span>Add File</span></button>}
+        {profile?.role === 'admin' && (
+          <div className="flex items-center gap-2">
+            <button onClick={openEditModuleModal} className="flex items-center space-x-1.5 bg-slate-800 dark:bg-white/10 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-black text-[9px] sm:text-[11px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+              <EditIcon className="w-4 h-4" /><span>Edit</span>
+            </button>
+            <button onClick={handleDeleteModule} className="flex items-center space-x-1.5 bg-red-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-black text-[9px] sm:text-[11px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+              <TrashIcon className="w-4 h-4" /><span>Delete</span>
+            </button>
+            <button onClick={openAddModal} className="flex items-center space-x-1.5 bg-emerald-600 text-white px-4 py-2.5 sm:px-6 sm:py-3 rounded-lg font-black text-[9px] sm:text-[11px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+              <PlusIcon className="w-4 h-4" /><span>Add File</span>
+            </button>
+          </div>
+        )}
       </div>
       
       <div className="bg-emerald-600 dark:bg-emerald-700 p-6 sm:p-12 rounded-2xl sm:rounded-[2.5rem] text-white mb-8 relative overflow-hidden shadow-2xl">

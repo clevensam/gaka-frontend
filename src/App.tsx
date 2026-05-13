@@ -82,6 +82,16 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     downloadUrl: ''
   });
 
+  const [isModuleModalOpen, setIsModuleModalOpen] = useState(false);
+  const [editingModule, setEditingModule] = useState<Module | null>(null);
+  const [moduleFormData, setModuleFormData] = useState({
+    code: '',
+    name: '',
+    description: '',
+    year: 3,
+    semester: 1
+  });
+
   const [profile, setProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
@@ -279,6 +289,54 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     }
   };
 
+  const handleSaveModule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProcessing(true);
+    try {
+      const payload = {
+        code: moduleFormData.code,
+        name: moduleFormData.name,
+        description: moduleFormData.description,
+        year: moduleFormData.year,
+        semester: moduleFormData.semester,
+      };
+      if (editingModule) {
+        await api.modules.update(editingModule.id, payload);
+      } else {
+        await api.modules.create(payload);
+      }
+      setIsModuleModalOpen(false);
+      await fetchData();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleDeleteModule = async (id: string) => {
+    if (!confirm("Delete this module and all its resources permanently?")) return;
+    try {
+      await api.modules.delete(id);
+      setSelectedModule(null);
+      await fetchData();
+    } catch (err) {
+      alert("Failed to delete module.");
+    }
+  };
+
+  const openAddModuleModal = () => {
+    setEditingModule(null);
+    setModuleFormData({ code: '', name: '', description: '', year: 3, semester: 1 });
+    setIsModuleModalOpen(true);
+  };
+
+  const openEditModuleModal = (m: Module) => {
+    setEditingModule(m);
+    setModuleFormData({ code: m.code, name: m.name, description: m.description, year: m.year, semester: m.semester });
+    setIsModuleModalOpen(true);
+  };
+
   const openAddModal = () => {
     setEditingResource(null);
     setResourceFormData({ title: '', type: 'Notes', viewUrl: '', downloadUrl: '' });
@@ -451,6 +509,8 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               filteredModules={filteredModules}
+              profile={profile}
+              onAddModule={openAddModuleModal}
               onModuleClick={(m: Module) => {
                 setSelectedModule(m);
                 navigate(`/modules/${slugify(m.name)}`);
@@ -463,6 +523,8 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               modules={modules}
               profile={profile}
               openAddModal={openAddModal}
+              openEditModuleModal={openEditModuleModal}
+              handleDeleteModule={handleDeleteModule}
               filterType={filterType}
               setFilterType={setFilterType}
               filteredResources={filteredResources}
@@ -572,6 +634,76 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         </div>
       )}
 
+      {/* Admin Module Management Modal */}
+      {isModuleModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-xl animate-fade-in">
+          <div className="bg-white dark:bg-[#0A0A0A] w-full max-w-lg rounded-2xl sm:rounded-[2.5rem] shadow-3xl border border-slate-100 dark:border-white/10 animate-slide-in relative max-h-[95vh] flex flex-col overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-6 py-6 sm:px-10 sm:py-8 border-b dark:border-white/5 flex justify-between items-center bg-white dark:bg-[#0A0A0A] shrink-0">
+              <div className="flex flex-col">
+                <h3 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none tracking-tight">
+                  {editingModule ? 'Edit Module' : 'New Module'}
+                </h3>
+                <p className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.3em] mt-2">MUST Registry Admin</p>
+              </div>
+              <button onClick={() => setIsModuleModalOpen(false)} className="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-400 transition-all hover:text-slate-900 dark:hover:text-white active:scale-90">
+                <CloseIcon className="w-6 h-6" />
+              </button>
+            </div>
+            
+            {/* Modal Content */}
+            <div className="overflow-y-auto px-6 py-8 sm:px-10 pb-10">
+              <form onSubmit={handleSaveModule} className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Module Code</label>
+                    <input type="text" placeholder="e.g. CS 201" required value={moduleFormData.code} onChange={e => setModuleFormData({...moduleFormData, code: e.target.value})} className="w-full px-5 py-4 bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl focus:border-emerald-500 outline-none text-slate-900 dark:text-white font-bold text-sm transition-all focus:ring-4 focus:ring-emerald-500/10" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Module Name</label>
+                    <input type="text" placeholder="e.g. Data Structures" required value={moduleFormData.name} onChange={e => setModuleFormData({...moduleFormData, name: e.target.value})} className="w-full px-5 py-4 bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl focus:border-emerald-500 outline-none text-slate-900 dark:text-white font-bold text-sm transition-all focus:ring-4 focus:ring-emerald-500/10" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Description</label>
+                  <textarea placeholder="Module description..." rows={3} value={moduleFormData.description} onChange={e => setModuleFormData({...moduleFormData, description: e.target.value})} className="w-full px-5 py-4 bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl focus:border-emerald-500 outline-none text-slate-900 dark:text-white font-bold text-sm transition-all focus:ring-4 focus:ring-emerald-500/10 resize-none" />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Academic Year</label>
+                    <div className="relative">
+                      <select value={moduleFormData.year} onChange={e => setModuleFormData({...moduleFormData, year: parseInt(e.target.value)})} className="w-full px-5 py-4 bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl focus:border-emerald-500 outline-none text-slate-900 dark:text-white font-black text-xs appearance-none">
+                        {[1, 2, 3, 4].map(y => <option key={y} value={y}>Year {y}</option>)}
+                      </select>
+                      <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400"><ChevronRightIcon className="w-4 h-4 rotate-90" /></div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 ml-2">Semester</label>
+                    <div className="relative">
+                      <select value={moduleFormData.semester} onChange={e => setModuleFormData({...moduleFormData, semester: parseInt(e.target.value)})} className="w-full px-5 py-4 bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-xl focus:border-emerald-500 outline-none text-slate-900 dark:text-white font-black text-xs appearance-none">
+                        <option value={1}>Semester 1</option>
+                        <option value={2}>Semester 2</option>
+                      </select>
+                      <div className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-slate-400"><ChevronRightIcon className="w-4 h-4 rotate-90" /></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-6">
+                  <button type="button" onClick={() => setIsModuleModalOpen(false)} className="order-2 sm:order-1 flex-1 py-4 bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-white/60 font-black text-[10px] uppercase rounded-xl transition-all active:scale-95">Cancel</button>
+                  <button type="submit" disabled={isProcessing} className="order-1 sm:order-2 flex-[2] py-4 bg-emerald-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl disabled:opacity-50 transition-all active:scale-95">
+                    {isProcessing ? "Saving..." : editingModule ? 'Update Module' : 'Create Module'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
       <footer className="py-12 px-6 border-t border-slate-50 dark:border-white/5 text-center opacity-30">
          <p className="text-[8px] sm:text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-[0.4em] leading-relaxed">&copy; {new Date().getFullYear()} SOFTLINK AFRICA • MUST ENGINEERING COMMUNITY</p>
       </footer>
@@ -628,7 +760,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   );
 };
 
-const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, filterType, setFilterType, ResourceItem }) => {
+const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, openEditModuleModal, handleDeleteModule, filterType, setFilterType, ResourceItem }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const module = modules.find((m: any) => slugify(m.name) === slug);
@@ -643,6 +775,8 @@ const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, fi
       onBack={() => navigate(`/explore/${module.year}/${module.semester}`)}
       profile={profile}
       openAddModal={openAddModal}
+      openEditModuleModal={() => openEditModuleModal(module)}
+      handleDeleteModule={() => handleDeleteModule(module.id)}
       filterType={filterType}
       setFilterType={setFilterType}
       filteredResources={filteredResources}

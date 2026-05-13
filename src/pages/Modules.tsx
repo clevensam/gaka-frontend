@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { SearchIcon, BackIcon } from '../components/shared/Icons';
+import { SearchIcon, BackIcon, PlusIcon } from '../components/shared/Icons';
 import { ModuleCard } from '../components/features/ModuleCard';
-import { Module } from '../lib/types';
+import { Module, Profile } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
 
 interface ModulesProps {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   filteredModules: Module[];
+  profile: Profile | null;
+  onAddModule: () => void;
   onModuleClick: (m: Module) => void;
 }
 
@@ -16,6 +18,8 @@ export const Modules: React.FC<ModulesProps> = ({
   searchQuery, 
   setSearchQuery, 
   filteredModules, 
+  profile,
+  onAddModule,
   onModuleClick 
 }) => {
   const { year, semester } = useParams<{ year: string, semester: string }>();
@@ -69,7 +73,7 @@ export const Modules: React.FC<ModulesProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-16">
         {semesterModules.map((m, i) => (
-          <div key={m.id} className="animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
+          <div key={m.id} className="animate-fade-in relative" style={{ animationDelay: `${i * 30}ms` }}>
             <ModuleCard module={m} onClick={() => onModuleClick(m)} />
           </div>
         ))}
@@ -79,6 +83,18 @@ export const Modules: React.FC<ModulesProps> = ({
           </div>
         )}
       </div>
+
+      {profile?.role === 'admin' && (
+        <div className="fixed bottom-8 right-8 z-50">
+          <button
+            onClick={onAddModule}
+            className="flex items-center space-x-2 bg-emerald-600 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-emerald-500/30 hover:bg-emerald-700 active:scale-95 transition-all"
+          >
+            <PlusIcon className="w-5 h-5" />
+            <span>New Module</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

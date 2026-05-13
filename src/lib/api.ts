@@ -127,6 +127,23 @@ export const api = {
 
     getById: (id: string) =>
       request<{ module: any; resources: any[] }>(`/modules/${id}`),
+
+    create: (data: { code: string; name: string; description?: string; year?: number; semester?: number }) =>
+      request<{ module: any }>('/modules', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      }),
+
+    update: (id: string, data: { code?: string; name?: string; description?: string; year?: number; semester?: number }) =>
+      request<{ module: any }>(`/modules/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      }),
+
+    delete: (id: string) =>
+      request<{ success: boolean }>(`/modules/${id}`, {
+        method: 'DELETE',
+      }),
   },
 
   resources: {

@@ -185,17 +185,20 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         if (mod) setSelectedModule(mod);
       }
 
-      const topRecent = (resourcesResponse.resources || []).slice(0, 8).map((r: any) => ({
-        id: r.id,
-        title: r.title,
-        type: r.type as ResourceType,
-        downloadUrl: r.download_url,
-        viewUrl: r.view_url,
-        moduleCode: r.modules?.code || 'CS',
-        moduleId: r.module_id,
-        moduleName: r.modules?.name || '',
-        created_at: r.created_at,
-      }));
+      const topRecent = (resourcesResponse.resources || []).slice(0, 8).map((r: any) => {
+        const mod = finalModules.find(m => m.id === r.module_id);
+        return {
+          id: r.id,
+          title: r.title,
+          type: r.type as ResourceType,
+          downloadUrl: r.download_url,
+          viewUrl: r.view_url,
+          moduleCode: mod?.code || 'CS',
+          moduleId: r.module_id,
+          moduleName: mod?.name || '',
+          created_at: r.created_at,
+        };
+      });
       setRecentFiles(topRecent);
 
       setRecentBlogPosts(blogResponse.posts);

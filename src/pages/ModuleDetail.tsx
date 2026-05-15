@@ -103,8 +103,6 @@ export const ModuleDetail: React.FC<ModuleDetailProps> = ({
         {/* Post Grid */}
         <PostGrid 
           resources={filteredResources} 
-          moduleCode={selectedModule.code}
-          onResourceClick={onResourceClick}
         />
       </div>
     </div>

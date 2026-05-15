@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from './lib/api';
 import { setToken, setStoredUser, clearAuth, getToken, getStoredUser } from './lib/auth';
-import { Navbar } from './components/layout/Navbar';
 import { BottomTabBar } from './components/layout/BottomTabBar';
 import { BlogHome } from './components/blog/BlogHome';
 import { BlogPostView } from './components/blog/BlogPostView';
@@ -390,14 +389,8 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-500 ${isDark ? 'dark bg-black text-white/90' : 'bg-[#fcfdfe] text-slate-900'}`}>
-      <Navbar 
-        isDark={isDark}
-        onToggleDark={() => setIsDark(!isDark)}
-        profile={profile}
-        onLogoutClick={handleLogout}
-      />
       
-      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-6 pb-24 sm:pt-8 sm:px-6 lg:pl-24 lg:pb-6">
+      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-4 pb-24 sm:pt-6 sm:px-6 lg:pl-24 lg:pb-6">
         <Routes>
           <Route path="/" element={
             <Home 

@@ -26,8 +26,7 @@ export const PostGrid: React.FC<PostGridProps> = ({ resources, moduleCode, onRes
         return (
           <div
             key={res.id}
-            className="group relative aspect-square overflow-hidden bg-slate-50 dark:bg-white/5 rounded-lg sm:rounded-xl active:scale-[0.97] transition-all cursor-pointer"
-            onClick={() => onResourceClick(res)}
+            className="group relative aspect-square overflow-hidden bg-slate-50 dark:bg-white/5 rounded-lg sm:rounded-xl transition-all"
           >
             {/* Background */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all group-hover:scale-105 ${
@@ -42,15 +41,13 @@ export const PostGrid: React.FC<PostGridProps> = ({ resources, moduleCode, onRes
               }`}>
                 <FileIcon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <span className={`text-[7px] sm:text-[8px] font-black uppercase tracking-widest ${
-                isNotes ? 'text-emerald-500' : 'text-amber-500'
-              }`}>
-                {res.type}
+              <span className="text-[7px] sm:text-[8px] font-bold text-slate-600 dark:text-white/60 text-center leading-tight line-clamp-2 px-2">
+                {res.title}
               </span>
             </div>
 
             {/* Bottom Blur Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent backdrop-blur-sm pt-6 pb-2 px-2 sm:pb-3 sm:px-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent backdrop-blur-sm pt-6 pb-2 px-2 sm:pb-3 sm:px-3">
               <span className="text-[9px] sm:text-[11px] font-bold text-white leading-tight line-clamp-2 text-left block mb-1.5">
                 {res.title}
               </span>

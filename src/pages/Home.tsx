@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AcademicFile } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
 import { StoriesBar } from '../components/features/StoriesBar';
@@ -11,11 +11,23 @@ interface HomeProps {
   onModuleClick: (moduleId: string) => void;
   savedResourceIds: string[];
   onToggleSave: (id: string) => void;
+  scrollToId?: string | null;
 }
 
 export const Home: React.FC<HomeProps> = ({ 
-  recentFiles, onExploreClick, onStoryClick, onModuleClick, savedResourceIds, onToggleSave
+  recentFiles, onExploreClick, onStoryClick, onModuleClick, savedResourceIds, onToggleSave, scrollToId
 }) => {
+  useEffect(() => {
+    if (!scrollToId) return;
+    const timer = setTimeout(() => {
+      const el = document.getElementById(`feed-post-${scrollToId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [scrollToId]);
+
   return (
     <div className="animate-fade-in pb-8">
       <SEO title="Home" />
@@ -41,7 +53,7 @@ export const Home: React.FC<HomeProps> = ({
         ))}
         {recentFiles.length === 0 && (
           <div className="text-center py-16 bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-100 dark:border-white/5 max-w-ig-feed w-full">
-            <p className="text-slate-400 dark:text-white/20 font-black uppercase tracking-widest text-[10px]">No recent uploads</p>
+            <p className="text-slate-400 dark:text-white/20 font-black uppercase tracking-widest text-[10px]">No resources yet</p>
             <button onClick={onExploreClick} className="mt-4 px-6 py-3 bg-emerald-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md active:scale-95 transition-all">
               Explore Modules
             </button>

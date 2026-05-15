@@ -34,6 +34,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
 
   return (
     <div 
+      id={`feed-post-${file.id}`}
       className="bg-white dark:bg-[#0A0A0A] rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden animate-fade-in max-w-ig-feed w-full"
       style={{ animationDelay: `${delay}ms` }}
     >

@@ -4,9 +4,10 @@ import { AcademicFile } from '../../lib/types';
 
 interface PostGridProps {
   resources: AcademicFile[];
+  onResourceClick?: (resource: AcademicFile) => void;
 }
 
-export const PostGrid: React.FC<PostGridProps> = ({ resources }) => {
+export const PostGrid: React.FC<PostGridProps> = ({ resources, onResourceClick }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-2">
       {resources.map((res) => {
@@ -14,7 +15,8 @@ export const PostGrid: React.FC<PostGridProps> = ({ resources }) => {
         return (
           <div
             key={res.id}
-            className="group relative aspect-square overflow-hidden bg-slate-50 dark:bg-white/5 rounded-lg sm:rounded-xl transition-all"
+            onClick={() => onResourceClick?.(res)}
+            className="group relative aspect-square overflow-hidden bg-slate-50 dark:bg-white/5 rounded-lg sm:rounded-xl transition-all cursor-pointer active:scale-[0.97]"
           >
             {/* Background */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all group-hover:scale-105 ${

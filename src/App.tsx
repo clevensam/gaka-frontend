@@ -43,6 +43,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   const [isLoading, setIsLoading] = useState(true);
   
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [focusedResourceId, setFocusedResourceId] = useState<string | null>(null);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [isBlogEditorOpen, setIsBlogEditorOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -363,9 +364,8 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   };
 
   const handleResourceClick = (resource: AcademicFile) => {
-    if (resource.viewUrl && resource.viewUrl !== '#') {
-      window.open(resource.viewUrl, '_blank', 'noopener,noreferrer');
-    }
+    setFocusedResourceId(resource.id);
+    navigate('/');
   };
 
   const filteredModules = useMemo(() => {
@@ -400,6 +400,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               onModuleClick={handleFeedModuleClick}
               savedResourceIds={savedResourceIds}
               onToggleSave={toggleSave}
+              scrollToId={focusedResourceId}
             />
           } />
           

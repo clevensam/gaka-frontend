@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   DownloadIcon, ShareIcon, BookmarkIcon, BookmarkFilledIcon, 
-  FileIcon, CommentIcon, HeartIcon, MoreIcon 
+  FileIcon, CommentIcon, HeartIcon, MoreIcon, ViewIcon 
 } from '../shared/Icons';
 import { AcademicFile } from '../../lib/types';
 
@@ -65,9 +65,12 @@ export const FeedPost: React.FC<FeedPostProps> = ({
       </div>
 
       {/* Media Area */}
-      <div className={`aspect-[4/3] flex items-center justify-center ${
-        isNotes ? 'bg-emerald-50/50 dark:bg-emerald-500/5' : 'bg-amber-50/50 dark:bg-amber-500/5'
-      }`}>
+      <button
+        onClick={() => onModuleClick(file.moduleId)}
+        className={`aspect-[4/3] w-full flex items-center justify-center relative group cursor-pointer overflow-hidden ${
+          isNotes ? 'bg-emerald-50/50 dark:bg-emerald-500/5' : 'bg-amber-50/50 dark:bg-amber-500/5'
+        }`}
+      >
         <div className="flex flex-col items-center gap-3">
           <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center ${
             isNotes 
@@ -82,17 +85,16 @@ export const FeedPost: React.FC<FeedPostProps> = ({
             {file.type}
           </span>
         </div>
-      </div>
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <ViewIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+        </div>
+      </button>
 
       {/* Engagement Bar */}
       <div className="flex items-center gap-1 px-4 py-2">
         <span className="text-xs font-bold text-slate-500 dark:text-white/50">
           {likeCount} likes
         </span>
-        <span className="text-xs text-slate-300 dark:text-white/20 mx-1">·</span>
-        <button onClick={() => onModuleClick(file.moduleId)} className="text-xs font-bold text-slate-500 dark:text-white/50 hover:text-emerald-600 transition-colors">
-          View details
-        </button>
       </div>
 
       {/* Caption */}

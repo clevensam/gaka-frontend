@@ -32,20 +32,8 @@ export const Modules: React.FC<ModulesProps> = ({
     <div className="animate-fade-in pb-8">
       <SEO title={year ? `Year ${year} Sem ${semester} Modules` : 'Explore Modules'} />
 
-      {/* Header */}
-      <div className="mb-6 max-w-ig-container mx-auto">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              {year ? `Year ${year} · Sem ${semester}` : ''}
-            </h2>
-            <p className="text-[10px] font-medium text-slate-400 dark:text-white/30 mt-0.5">
-              {displayModules.length} {displayModules.length === 1 ? 'module' : 'modules'} available
-            </p>
-          </div>
-        </div>
-
-        {/* Search */}
+      {/* Search on top */}
+      <div className="mb-5 max-w-ig-container mx-auto">
         <div className="relative">
           <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
@@ -56,6 +44,15 @@ export const Modules: React.FC<ModulesProps> = ({
             className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-white/5 border border-transparent focus:border-emerald-500/50 rounded-xl outline-none text-xs font-bold text-slate-900 dark:text-white transition-all"
           />
         </div>
+      </div>
+
+      {/* Header */}
+      <div className="mb-5 max-w-ig-container mx-auto">
+        {year && (
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            Year {year} · Sem {semester}
+          </h2>
+        )}
       </div>
 
       {/* Grid */}

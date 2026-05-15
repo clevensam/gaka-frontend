@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { api } from './lib/api';
 import { setToken, setStoredUser, clearAuth, getToken, getStoredUser } from './lib/auth';
 import { Navbar } from './components/layout/Navbar';
+import { BottomTabBar } from './components/layout/BottomTabBar';
 import { BlogHome } from './components/blog/BlogHome';
 import { BlogPostView } from './components/blog/BlogPostView';
 import { BlogEditor } from './components/blog/BlogEditor';
@@ -30,16 +30,12 @@ import {
 } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 
-// Import Pages
 import { Home } from './pages/Home';
 import { SEO, slugify } from './components/shared/SEO';
 import { Modules } from './pages/Modules';
-import { Semesters } from './pages/Semesters';
 import { ModuleDetail } from './pages/ModuleDetail';
 import { Saved } from './pages/Saved';
 import { About } from './pages/About';
-
-// --- SUPABASE CONFIGURATION ---
 
 interface AppContentProps {
   isDark: boolean;
@@ -181,26 +177,31 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
             type: r.type as ResourceType,
             downloadUrl: r.download_url || '#',
             viewUrl: r.view_url || '#',
+            moduleCode: m.code,
+            moduleName: m.name,
+            moduleId: m.id,
+            created_at: r.created_at,
           }))
       }));
 
       setModules(finalModules);
 
-      const savedView = localStorage.getItem('gaka-current-view');
       const savedModuleId = localStorage.getItem('gaka-selected-module-id');
-      if (savedView === 'detail' && savedModuleId) {
+      if (savedModuleId) {
         const mod = finalModules.find(m => m.id === savedModuleId);
         if (mod) setSelectedModule(mod);
       }
 
-      const topRecent = (resourcesResponse.resources || []).slice(0, 5).map((r: any) => ({
+      const topRecent = (resourcesResponse.resources || []).slice(0, 8).map((r: any) => ({
         id: r.id,
         title: r.title,
         type: r.type as ResourceType,
         downloadUrl: r.download_url,
         viewUrl: r.view_url,
         moduleCode: r.modules?.code || 'CS',
-        moduleId: r.module_id
+        moduleId: r.module_id,
+        moduleName: r.modules?.name || '',
+        created_at: r.created_at,
       }));
       setRecentFiles(topRecent);
 
@@ -366,6 +367,28 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleStoryClick = (resourceId: string, moduleId: string) => {
+    const mod = modules.find(m => m.id === moduleId);
+    if (mod) {
+      setSelectedModule(mod);
+      navigate(`/modules/${slugify(mod.name)}`);
+    }
+  };
+
+  const handleFeedModuleClick = (moduleId: string) => {
+    const mod = modules.find(m => m.id === moduleId);
+    if (mod) {
+      setSelectedModule(mod);
+      navigate(`/modules/${slugify(mod.name)}`);
+    }
+  };
+
+  const handleResourceClick = (resource: AcademicFile) => {
+    if (resource.viewUrl && resource.viewUrl !== '#') {
+      window.open(resource.viewUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   const filteredModules = useMemo(() => {
     const q = searchQuery.toLowerCase();
     return modules.filter(m => m.name.toLowerCase().includes(q) || m.code.toLowerCase().includes(q));
@@ -484,7 +507,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         onLogoutClick={handleLogout}
       />
       
-      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-20 pb-6 sm:pt-24 sm:pb-12 sm:px-10">
+      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-6 pb-24 sm:pt-8 sm:px-6 lg:px-10">
         <Routes>
           <Route path="/" element={
             <Home 
@@ -496,12 +519,25 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
                 setSelectedPost(p);
                 navigate(`/blog/${p.id}`);
               }}
-              ResourceItem={ResourceItem}
+              onStoryClick={handleStoryClick}
+              onModuleClick={handleFeedModuleClick}
+              savedResourceIds={savedResourceIds}
+              onToggleSave={toggleSave}
             />
           } />
           
           <Route path="/modules" element={
-            <Semesters modules={modules} />
+            <Modules 
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              filteredModules={filteredModules}
+              profile={profile}
+              onAddModule={openAddModuleModal}
+              onModuleClick={(m: Module) => {
+                setSelectedModule(m);
+                navigate(`/modules/${slugify(m.name)}`);
+              }}
+            />
           } />
           
           <Route path="/explore/:year/:semester" element={
@@ -527,8 +563,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               handleDeleteModule={handleDeleteModule}
               filterType={filterType}
               setFilterType={setFilterType}
-              filteredResources={filteredResources}
-              ResourceItem={ResourceItem}
+              handleResourceClick={handleResourceClick}
             />
           } />
           
@@ -555,7 +590,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               <Saved 
                 savedResources={savedResources}
                 onBrowseClick={() => navigate('/modules')}
-                ResourceItem={ResourceItem}
               />
             ) : <Navigate to="/auth" />
           } />
@@ -579,7 +613,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       {isResourceModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-xl animate-fade-in">
           <div className="bg-white dark:bg-[#0A0A0A] w-full max-w-lg rounded-2xl sm:rounded-[2.5rem] shadow-3xl border border-slate-100 dark:border-white/10 animate-slide-in relative max-h-[95vh] flex flex-col overflow-hidden">
-            {/* Modal Header */}
             <div className="px-6 py-6 sm:px-10 sm:py-8 border-b dark:border-white/5 flex justify-between items-center bg-white dark:bg-[#0A0A0A] shrink-0">
               <div className="flex flex-col">
                 <h3 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none tracking-tight">
@@ -592,7 +625,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               </button>
             </div>
             
-            {/* Modal Content - Scrollable area */}
             <div className="overflow-y-auto px-6 py-8 sm:px-10 pb-10">
               <form onSubmit={handleSaveResource} className="space-y-6">
                 <div className="space-y-2">
@@ -638,7 +670,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       {isModuleModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/80 backdrop-blur-xl animate-fade-in">
           <div className="bg-white dark:bg-[#0A0A0A] w-full max-w-lg rounded-2xl sm:rounded-[2.5rem] shadow-3xl border border-slate-100 dark:border-white/10 animate-slide-in relative max-h-[95vh] flex flex-col overflow-hidden">
-            {/* Modal Header */}
             <div className="px-6 py-6 sm:px-10 sm:py-8 border-b dark:border-white/5 flex justify-between items-center bg-white dark:bg-[#0A0A0A] shrink-0">
               <div className="flex flex-col">
                 <h3 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white leading-none tracking-tight">
@@ -651,7 +682,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               </button>
             </div>
             
-            {/* Modal Content */}
             <div className="overflow-y-auto px-6 py-8 sm:px-10 pb-10">
               <form onSubmit={handleSaveModule} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -704,9 +734,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         </div>
       )}
 
-      <footer className="py-12 px-6 border-t border-slate-50 dark:border-white/5 text-center opacity-30">
-         <p className="text-[8px] sm:text-[9px] font-black text-slate-400 dark:text-white/20 uppercase tracking-[0.4em] leading-relaxed">&copy; {new Date().getFullYear()} SOFTLINK AFRICA • MUST ENGINEERING COMMUNITY</p>
-      </footer>
       <Chatbot modules={modules} onNavigate={navigateTo} />
       
       {isBlogEditorOpen && profile && (
@@ -720,6 +747,9 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
           }}
         />
       )}
+
+      {/* Bottom Tab Bar - Instagram Style */}
+      <BottomTabBar profile={profile} />
 
       <Analytics />
 
@@ -760,7 +790,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   );
 };
 
-const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, openEditModuleModal, handleDeleteModule, filterType, setFilterType, ResourceItem }) => {
+const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, openEditModuleModal, handleDeleteModule, filterType, setFilterType, handleResourceClick }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const module = modules.find((m: any) => slugify(m.name) === slug);
@@ -772,7 +802,7 @@ const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, op
   return (
     <ModuleDetail 
       selectedModule={module}
-      onBack={() => navigate(`/explore/${module.year}/${module.semester}`)}
+      onBack={() => navigate('/modules')}
       profile={profile}
       openAddModal={openAddModal}
       openEditModuleModal={() => openEditModuleModal(module)}
@@ -780,7 +810,7 @@ const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, op
       filterType={filterType}
       setFilterType={setFilterType}
       filteredResources={filteredResources}
-      ResourceItem={ResourceItem}
+      onResourceClick={handleResourceClick}
     />
   );
 };

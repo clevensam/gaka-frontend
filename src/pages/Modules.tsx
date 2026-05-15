@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { SearchIcon, BackIcon, PlusIcon } from '../components/shared/Icons';
+import { useParams } from 'react-router-dom';
+import { SearchIcon, PlusIcon } from '../components/shared/Icons';
 import { ModuleCard } from '../components/features/ModuleCard';
 import { Module, Profile } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
@@ -15,85 +15,79 @@ interface ModulesProps {
 }
 
 export const Modules: React.FC<ModulesProps> = ({ 
-  searchQuery, 
-  setSearchQuery, 
-  filteredModules, 
-  profile,
-  onAddModule,
-  onModuleClick 
+  searchQuery, setSearchQuery, filteredModules, profile, onAddModule, onModuleClick 
 }) => {
   const { year, semester } = useParams<{ year: string, semester: string }>();
-  const navigate = useNavigate();
 
-  const currentYear = parseInt(year || '3');
-  const currentSemester = parseInt(semester || '1');
-
-  const semesterModules = useMemo(() => {
-    return filteredModules.filter(m => 
-      m.year === currentYear && m.semester === currentSemester
-    );
-  }, [filteredModules, currentYear, currentSemester]);
+  const displayModules = useMemo(() => {
+    if (year && semester) {
+      return filteredModules.filter(m => 
+        m.year === parseInt(year) && m.semester === parseInt(semester)
+      );
+    }
+    return filteredModules;
+  }, [filteredModules, year, semester]);
 
   return (
-    <div className="animate-fade-in">
-      <SEO title={`Year ${currentYear} Sem ${currentSemester} Modules`} description={`Modules and resources for Year ${currentYear} Semester ${currentSemester}.`} />
-      
-      <div className="flex flex-col mb-12 sm:mb-20 gap-10 px-1">
-        <div className="space-y-6">
-          <button 
-            onClick={() => navigate('/modules')}
-            className="flex items-center text-emerald-600 dark:text-emerald-400 font-black text-[10px] uppercase tracking-[0.2em] hover:translate-x-[-4px] transition-transform"
-          >
-            <BackIcon className="w-4 h-4 mr-2" />
-            Directory / Year {currentYear}
-          </button>
-          <div className="space-y-3">
-            <h2 className="text-4xl sm:text-8xl font-black tracking-tighter leading-none">
-              Semester {currentSemester}
+    <div className="animate-fade-in pb-8">
+      <SEO title={year ? `Year ${year} Sem ${semester} Modules` : 'Explore Modules'} />
+
+      {/* Header */}
+      <div className="mb-6 max-w-ig-container mx-auto">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {year ? `Year ${year} · Sem ${semester}` : 'Explore'}
             </h2>
-            <p className="text-slate-400 dark:text-white/30 font-bold text-sm sm:text-xl max-w-2xl leading-relaxed">
-              Active directory for Semester {currentSemester} of Study Year {currentYear}.
+            <p className="text-[10px] font-medium text-slate-400 dark:text-white/30 mt-0.5">
+              {displayModules.length} {displayModules.length === 1 ? 'module' : 'modules'} available
             </p>
           </div>
         </div>
-        
-        <div className="relative w-full max-w-[640px]">
-          <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
-            <SearchIcon className="w-6 h-6 text-slate-300 dark:text-white/20" />
-          </div>
-          <input 
-            type="text" 
-            placeholder="Search within directory..." 
-            value={searchQuery} 
+
+        {/* Search */}
+        <div className="relative">
+          <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search modules..."
+            value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-16 pr-8 py-5 sm:py-7 bg-white dark:bg-[#0A0A0A] border border-slate-100 dark:border-white/10 rounded-2xl sm:rounded-[2.5rem] focus:ring-emerald-500/10 outline-none shadow-xl shadow-slate-200/20 dark:shadow-none text-base sm:text-xl font-bold placeholder:text-slate-300 dark:placeholder:text-white/10" 
+            className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-white/5 border border-transparent focus:border-emerald-500/50 rounded-xl outline-none text-xs font-bold text-slate-900 dark:text-white transition-all"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 pb-16">
-        {semesterModules.map((m, i) => (
-          <div key={m.id} className="animate-fade-in relative" style={{ animationDelay: `${i * 30}ms` }}>
+      {/* Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        {displayModules.map((m, i) => (
+          <div key={m.id} className="animate-fade-in" style={{ animationDelay: `${i * 30}ms` }}>
             <ModuleCard module={m} onClick={() => onModuleClick(m)} />
           </div>
         ))}
-        {semesterModules.length === 0 && (
-          <div className="col-span-full py-20 text-center bg-slate-50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-100 dark:border-white/5">
-             <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">No modules found in this semester.</p>
+        {displayModules.length === 0 && (
+          <div className="col-span-full py-16 text-center bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-100 dark:border-white/5">
+            <p className="text-slate-400 dark:text-white/20 font-black uppercase tracking-widest text-[9px]">No modules found</p>
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="mt-3 text-[9px] font-black text-emerald-600 uppercase tracking-widest"
+              >
+                Clear search
+              </button>
+            )}
           </div>
         )}
       </div>
 
+      {/* Admin FAB */}
       {profile?.role === 'admin' && (
-        <div className="fixed bottom-8 right-8 z-50">
-          <button
-            onClick={onAddModule}
-            className="flex items-center space-x-2 bg-emerald-600 text-white px-6 py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-emerald-500/30 hover:bg-emerald-700 active:scale-95 transition-all"
-          >
-            <PlusIcon className="w-5 h-5" />
-            <span>New Module</span>
-          </button>
-        </div>
+        <button
+          onClick={onAddModule}
+          className="fixed bottom-20 right-6 sm:bottom-24 sm:right-8 z-40 w-12 h-12 bg-emerald-600 text-white rounded-2xl shadow-2xl shadow-emerald-500/30 flex items-center justify-center hover:bg-emerald-700 active:scale-90 transition-all"
+        >
+          <PlusIcon className="w-6 h-6" />
+        </button>
       )}
     </div>
   );

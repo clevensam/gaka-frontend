@@ -18,6 +18,13 @@ export interface AcademicFile {
   downloadUrl: string;
   viewUrl: string;
   size?: string;
+  views_count?: number;
+  downloads_count?: number;
+  likes_count?: number;
+  created_at?: string;
+  moduleCode?: string;
+  moduleName?: string;
+  moduleId?: string;
 }
 
 export interface Module {

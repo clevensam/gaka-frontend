@@ -1,9 +1,9 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { ChevronRightIcon } from '../components/shared/Icons';
-import { BlogCard } from '../components/blog/BlogCard';
-import { BlogPost, AcademicFile, ResourceType } from '../lib/types';
+import { AcademicFile, BlogPost } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
+import { StoriesBar } from '../components/features/StoriesBar';
+import { FeedPost } from '../components/features/FeedPost';
+import { BlogCard } from '../components/blog/BlogCard';
 
 interface HomeProps {
   recentFiles: (AcademicFile & { moduleCode: string; moduleId: string })[];
@@ -11,71 +11,77 @@ interface HomeProps {
   onExploreClick: () => void;
   onBlogClick: () => void;
   onPostClick: (post: BlogPost) => void;
-  ResourceItem: React.FC<{ file: AcademicFile; moduleCode?: string; delay: number }>;
+  onStoryClick: (resourceId: string, moduleId: string) => void;
+  onModuleClick: (moduleId: string) => void;
+  savedResourceIds: string[];
+  onToggleSave: (id: string) => void;
 }
 
 export const Home: React.FC<HomeProps> = ({ 
-  recentFiles, 
-  recentBlogPosts, 
-  onExploreClick, 
-  onBlogClick, 
-  onPostClick,
-  ResourceItem 
+  recentFiles, recentBlogPosts, onExploreClick, onBlogClick, 
+  onPostClick, onStoryClick, onModuleClick, savedResourceIds, onToggleSave
 }) => {
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in pb-8">
       <SEO title="Home" />
-      <div className="flex flex-col items-center text-center pt-6 pb-12 sm:pt-12 sm:pb-20 lg:pt-20">
-        <div className="inline-flex items-center space-x-2 bg-emerald-50 dark:bg-[#1E1E1E] px-4 py-1.5 rounded-full mb-6 border border-emerald-100/50 dark:border-white/5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-800 dark:text-emerald-400">Portal v2.6</span>
+
+      {/* Stories Bar */}
+      {recentFiles.length > 0 && (
+        <div className="mb-6 border-b border-slate-50 dark:border-white/5 pb-4">
+          <StoriesBar resources={recentFiles} onStoryClick={onStoryClick} />
         </div>
-        <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-[85px] font-black mb-6 tracking-tighter leading-[1.05] max-w-4xl px-2">
-          Centralized <span className="gradient-text">Academic</span> Hub.
-        </h2>
-        <p className="text-sm sm:text-xl md:text-2xl text-slate-500 dark:text-white/40 max-w-2xl mb-10 font-medium px-6 leading-relaxed">Verified Computer Science materials for MUST students, instantly accessible.</p>
-        <button onClick={onExploreClick} className="group flex items-center px-8 py-4 sm:px-20 sm:py-6 bg-emerald-600 dark:bg-emerald-500 text-white rounded-full font-black text-xs sm:text-lg shadow-xl hover:scale-105 active:scale-95 transition-all">
-          Explore Repository <ChevronRightIcon className="ml-3 w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-1.5 transition-transform" />
-        </button>
+      )}
+
+      {/* Feed Header */}
+      <div className="max-w-ig-feed mx-auto w-full mb-4 px-1">
+        <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Recent Uploads</h2>
+        <p className="text-[10px] font-medium text-slate-400 dark:text-white/30">Latest resources added to the repository</p>
       </div>
 
-      <div className="max-w-4xl mx-auto mt-8 sm:mt-16 px-1">
-         <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight">Recently <span className="text-emerald-600">Uploaded</span></h3>
-            <button onClick={onExploreClick} className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors">View All Resources</button>
-         </div>
-         <div className="grid grid-cols-1 gap-3 sm:gap-4">
-            {recentFiles.map((f, i) => (
-              <ResourceItem key={f.id} file={f} moduleCode={f.moduleCode} delay={i * 50} />
-            ))}
-            {recentFiles.length === 0 && (
-              <p className="text-center py-10 text-slate-400 text-xs font-medium">No recent uploads found.</p>
-            )}
-         </div>
+      {/* Feed Posts */}
+      <div className="space-y-4 sm:space-y-6">
+        {recentFiles.map((f, i) => (
+          <FeedPost 
+            key={f.id}
+            file={f}
+            isSaved={savedResourceIds.includes(f.id)}
+            onToggleSave={onToggleSave}
+            onModuleClick={onModuleClick}
+            delay={i * 80}
+          />
+        ))}
+        {recentFiles.length === 0 && (
+          <div className="text-center py-16 bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-100 dark:border-white/5 max-w-ig-feed mx-auto w-full">
+            <p className="text-slate-400 dark:text-white/20 font-black uppercase tracking-widest text-[10px]">No recent uploads</p>
+            <button onClick={onExploreClick} className="mt-4 px-6 py-3 bg-emerald-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md active:scale-95 transition-all">
+              Explore Modules
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Blog Section on Home Page */}
-      <div className="max-w-4xl mx-auto mt-20 sm:mt-32 px-1">
-         <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight">Three Latest <span className="text-emerald-600">Blogs</span></h3>
-            <button onClick={onBlogClick} className="text-[9px] font-black uppercase tracking-widest text-slate-400 hover:text-emerald-600 transition-colors">Read All Articles</button>
-         </div>
-         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Blog Preview */}
+      {recentBlogPosts.length > 0 && (
+        <div className="mt-12 sm:mt-16 max-w-ig-feed mx-auto w-full">
+          <div className="flex items-center justify-between mb-5 px-1">
+            <div>
+              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">From the Blog</h3>
+              <p className="text-[9px] font-medium text-slate-400 dark:text-white/30">Latest community posts</p>
+            </div>
+            <button 
+              onClick={onBlogClick}
+              className="text-[9px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-700 transition-colors active:scale-95"
+            >
+              See All
+            </button>
+          </div>
+          <div className="space-y-4">
             {recentBlogPosts.map((post, i) => (
-              <BlogCard 
-                key={post.id}
-                post={post}
-                onClick={onPostClick}
-                index={i}
-              />
+              <BlogCard key={post.id} post={post} onClick={onPostClick} index={i} />
             ))}
-            {recentBlogPosts.length === 0 && (
-              <div className="col-span-full py-16 text-center bg-slate-50/50 dark:bg-white/5 rounded-3xl border-2 border-dashed border-slate-100 dark:border-white/5">
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-widest">No blog posts yet.</p>
-              </div>
-            )}
-         </div>
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

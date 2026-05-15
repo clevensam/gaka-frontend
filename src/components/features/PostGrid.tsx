@@ -47,7 +47,7 @@ export const PostGrid: React.FC<PostGridProps> = ({ resources, moduleCode, onRes
             </div>
 
             {/* Bottom Blur Bar */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent backdrop-blur-sm pt-6 pb-2 px-2 sm:pb-3 sm:px-3">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-6 pb-2 px-2 sm:pb-3 sm:px-3">
               <span className="text-[9px] sm:text-[11px] font-bold text-white leading-tight line-clamp-2 text-left block mb-1.5">
                 {res.title}
               </span>

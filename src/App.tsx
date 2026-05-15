@@ -402,13 +402,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
           <Route path="/" element={
             <Home 
               recentFiles={recentFiles}
-              recentBlogPosts={recentBlogPosts}
               onExploreClick={() => navigate('/modules')}
-              onBlogClick={() => navigate('/blog')}
-              onPostClick={(p: BlogPost) => {
-                setSelectedPost(p);
-                navigate(`/blog/${p.id}`);
-              }}
               onStoryClick={handleStoryClick}
               onModuleClick={handleFeedModuleClick}
               savedResourceIds={savedResourceIds}

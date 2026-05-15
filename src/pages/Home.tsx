@@ -1,16 +1,12 @@
 import React from 'react';
-import { AcademicFile, BlogPost } from '../lib/types';
+import { AcademicFile } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
 import { StoriesBar } from '../components/features/StoriesBar';
 import { FeedPost } from '../components/features/FeedPost';
-import { BlogCard } from '../components/blog/BlogCard';
 
 interface HomeProps {
   recentFiles: (AcademicFile & { moduleCode: string; moduleId: string })[];
-  recentBlogPosts: BlogPost[];
   onExploreClick: () => void;
-  onBlogClick: () => void;
-  onPostClick: (post: BlogPost) => void;
   onStoryClick: (resourceId: string, moduleId: string) => void;
   onModuleClick: (moduleId: string) => void;
   savedResourceIds: string[];
@@ -18,8 +14,7 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ 
-  recentFiles, recentBlogPosts, onExploreClick, onBlogClick, 
-  onPostClick, onStoryClick, onModuleClick, savedResourceIds, onToggleSave
+  recentFiles, onExploreClick, onStoryClick, onModuleClick, savedResourceIds, onToggleSave
 }) => {
   return (
     <div className="animate-fade-in pb-8">
@@ -60,28 +55,6 @@ export const Home: React.FC<HomeProps> = ({
         )}
       </div>
 
-      {/* Blog Preview */}
-      {recentBlogPosts.length > 0 && (
-        <div className="mt-12 sm:mt-16 max-w-ig-feed mx-auto w-full">
-          <div className="flex items-center justify-between mb-5 px-1">
-            <div>
-              <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight">From the Blog</h3>
-              <p className="text-[9px] font-medium text-slate-400 dark:text-white/30">Latest community posts</p>
-            </div>
-            <button 
-              onClick={onBlogClick}
-              className="text-[9px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-700 transition-colors active:scale-95"
-            >
-              See All
-            </button>
-          </div>
-          <div className="space-y-4">
-            {recentBlogPosts.map((post, i) => (
-              <BlogCard key={post.id} post={post} onClick={onPostClick} index={i} />
-            ))}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

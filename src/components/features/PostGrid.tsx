@@ -31,8 +31,8 @@ export const PostGrid: React.FC<PostGridProps> = ({ resources, moduleCode, onRes
             {/* Background */}
             <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all group-hover:scale-105 ${
               isNotes 
-                ? 'bg-emerald-50/80 dark:bg-emerald-500/10' 
-                : 'bg-amber-50/80 dark:bg-amber-500/10'
+                ? 'bg-emerald-50 dark:bg-emerald-950' 
+                : 'bg-amber-50 dark:bg-amber-950'
             }`}>
               <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center ${
                 isNotes 

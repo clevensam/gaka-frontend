@@ -37,7 +37,7 @@ export const Modules: React.FC<ModulesProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              {year ? `Year ${year} · Sem ${semester}` : 'Explore'}
+              {year ? `Year ${year} · Sem ${semester}` : ''}
             </h2>
             <p className="text-[10px] font-medium text-slate-400 dark:text-white/30 mt-0.5">
               {displayModules.length} {displayModules.length === 1 ? 'module' : 'modules'} available

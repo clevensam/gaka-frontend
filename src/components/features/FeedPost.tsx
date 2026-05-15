@@ -73,15 +73,18 @@ export const FeedPost: React.FC<FeedPostProps> = ({
           isNotes ? 'bg-emerald-50/50 dark:bg-emerald-500/5' : 'bg-amber-50/50 dark:bg-amber-500/5'
         }`}
       >
-        <div className="flex flex-col items-center gap-3">
-          <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center ${
+        <div className="flex flex-col items-center gap-2 px-6">
+          <div className={`w-14 h-14 sm:w-18 sm:h-18 rounded-2xl flex items-center justify-center ${
             isNotes 
               ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' 
               : 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400'
           }`}>
-            <FileIcon className="w-8 h-8 sm:w-10 sm:h-10" />
+            <FileIcon className="w-7 h-7 sm:w-9 sm:h-9" />
           </div>
-          <span className={`text-[9px] font-black uppercase tracking-widest ${
+          <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-white/80 text-center leading-tight line-clamp-2">
+            {file.title}
+          </span>
+          <span className={`text-[8px] font-black uppercase tracking-widest ${
             isNotes ? 'text-emerald-500' : 'text-amber-500'
           }`}>
             {file.type}

@@ -65,9 +65,11 @@ export const FeedPost: React.FC<FeedPostProps> = ({
       </div>
 
       {/* Media Area */}
-      <button
-        onClick={() => onModuleClick(file.moduleId)}
-        className={`aspect-[4/3] w-full flex items-center justify-center relative group cursor-pointer overflow-hidden ${
+      <a
+        href={file.viewUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`aspect-[4/3] w-full flex items-center justify-center relative group cursor-pointer overflow-hidden block ${
           isNotes ? 'bg-emerald-50/50 dark:bg-emerald-500/5' : 'bg-amber-50/50 dark:bg-amber-500/5'
         }`}
       >
@@ -88,7 +90,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <ViewIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
         </div>
-      </button>
+      </a>
 
       {/* Engagement Bar */}
       <div className="flex items-center gap-1 px-4 py-2">

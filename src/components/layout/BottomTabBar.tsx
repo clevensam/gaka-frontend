@@ -3,7 +3,6 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { 
   HomeIcon, HomeFilledIcon,
   ExploreIcon, ExploreFilledIcon,
-  BlogIcon, BlogFilledIcon,
   BookmarkIcon, SavedFilledIcon,
   UserIcon, ProfileFilledIcon,
   LogoutIcon
@@ -20,7 +19,6 @@ interface BottomTabBarProps {
 const tabs = [
   { id: 'home', label: 'Home', icon: HomeIcon, activeIcon: HomeFilledIcon, path: '/' },
   { id: 'explore', label: 'Explore', icon: ExploreIcon, activeIcon: ExploreFilledIcon, path: '/modules' },
-  { id: 'blog', label: 'Blog', icon: BlogIcon, activeIcon: BlogFilledIcon, path: '/blog' },
   { id: 'saved', label: 'Saved', icon: BookmarkIcon, activeIcon: SavedFilledIcon, path: '/saved' },
   { id: 'profile', label: 'Profile', icon: UserIcon, activeIcon: ProfileFilledIcon, path: null },
 ];

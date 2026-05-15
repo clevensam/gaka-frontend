@@ -2,10 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { api } from './lib/api';
 import { setToken, setStoredUser, clearAuth, getToken, getStoredUser } from './lib/auth';
 import { BottomTabBar } from './components/layout/BottomTabBar';
-import { BlogHome } from './components/blog/BlogHome';
-import { BlogPostView } from './components/blog/BlogPostView';
-import { BlogEditor } from './components/blog/BlogEditor';
-import { BlogPost } from './lib/types';
 import { AuthPage } from './components/auth/AuthPage';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles } from 'lucide-react';
@@ -39,13 +35,10 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   const navigate = useNavigate();
   const [modules, setModules] = useState<Module[]>([]);
   const [recentFiles, setRecentFiles] = useState<(AcademicFile & { moduleCode: string; moduleId: string })[]>([]);
-  const [recentBlogPosts, setRecentBlogPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const [selectedModule, setSelectedModule] = useState<Module | null>(null);
   const [focusedResourceId, setFocusedResourceId] = useState<string | null>(null);
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [isBlogEditorOpen, setIsBlogEditorOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<ResourceType | 'All'>('All');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -149,10 +142,9 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     try {
       setIsLoading(true);
 
-      const [modulesResponse, resourcesResponse, blogResponse] = await Promise.all([
+      const [modulesResponse, resourcesResponse] = await Promise.all([
         api.modules.getAll(),
         api.resources.getAll(),
-        api.blog.getPosts().catch(() => ({ posts: [] }))
       ]);
 
       const finalModules: Module[] = modulesResponse.modules.map(m => ({
@@ -201,7 +193,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       });
       setRecentFiles(topRecent);
 
-      setRecentBlogPosts(blogResponse.posts);
     } catch (err: any) {
       console.error("Sync failure.", err);
       if (err.message?.includes('Failed to fetch')) {
@@ -343,7 +334,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       navigate(view === 'home' ? '/' : `/${view}`);
     }
     
-    setIsBlogEditorOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -442,24 +432,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
               filterType={filterType}
               setFilterType={setFilterType}
               handleResourceClick={handleResourceClick}
-            />
-          } />
-          
-          <Route path="/blog" element={
-            <BlogHome 
-              profile={profile} 
-              onPostClick={(p) => {
-                setSelectedPost(p);
-                navigate(`/blog/${p.id}`);
-              }}
-              onCreatePost={() => setIsBlogEditorOpen(true)}
-            />
-          } />
-          
-          <Route path="/blog/:id" element={
-            <BlogPostWrapper 
-              profile={profile}
-              recentBlogPosts={recentBlogPosts}
             />
           } />
           
@@ -626,18 +598,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         </div>
       )}
 
-      {isBlogEditorOpen && profile && (
-        <BlogEditor 
-          profile={profile} 
-          onClose={() => setIsBlogEditorOpen(false)}
-          onPublish={() => {
-            setIsBlogEditorOpen(false);
-            setSelectedPost(null);
-            navigateTo('blog');
-          }}
-        />
-      )}
-
       {/* Bottom Tab Bar - Instagram Style */}
       <BottomTabBar profile={profile} isDark={isDark} onToggleDark={() => setIsDark(!isDark)} onLogoutClick={handleLogout} />
 
@@ -701,44 +661,6 @@ const ModuleDetailWrapper: React.FC<any> = ({ modules, profile, openAddModal, op
       setFilterType={setFilterType}
       filteredResources={filteredResources}
       onResourceClick={handleResourceClick}
-    />
-  );
-};
-
-const BlogPostWrapper: React.FC<any> = ({ profile, recentBlogPosts }) => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [post, setPost] = useState<BlogPost | null>(() => recentBlogPosts.find((p: any) => p.id === id) || null);
-  const [loading, setLoading] = useState(!post);
-
-  useEffect(() => {
-    if (!post && id) {
-      const fetchPost = async () => {
-        try {
-          const response = await api.blog.getPost(id);
-          const data = response.post;
-          setPost({
-            ...data,
-            author: data.author,
-          });
-        } catch (err) {
-          console.error("Error fetching post:", err);
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchPost();
-    }
-  }, [id, post]);
-
-  if (loading) return <div className="flex justify-center py-20"><div className="w-8 h-8 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin"></div></div>;
-  if (!post) return <Navigate to="/blog" />;
-
-  return (
-    <BlogPostView 
-      post={post} 
-      profile={profile}
-      onBack={() => navigate('/blog')}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { Profile, BlogPost } from './types';
+import { Profile } from './types';
 import { getToken } from './auth';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
@@ -65,61 +65,6 @@ export const api = {
       }),
 
     me: () => request<{ user: Profile }>('/auth/me'),
-  },
-
-  chat: {
-    send: (data: { messages: any[]; systemInstruction?: string }) =>
-      request<{ text: string; user?: any }>('/chat', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }),
-  },
-
-  blog: {
-    getPosts: () => request<{ posts: BlogPost[] }>('/blog/posts'),
-
-    getPost: (id: string) =>
-      request<{ post: BlogPost & { comments: any[]; likes_count: number } }>(`/blog/posts/${id}`),
-
-    createPost: (data: { title: string; content: string; cover_image?: string; tags?: string[] }) =>
-      request<{ post: BlogPost }>('/blog/posts', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }),
-
-    updatePost: (id: string, data: { title?: string; content?: string; cover_image?: string; tags?: string[] }) =>
-      request<{ post: BlogPost }>(`/blog/posts/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(data),
-      }),
-
-    deletePost: (id: string) =>
-      request<{ success: boolean }>(`/blog/posts/${id}`, {
-        method: 'DELETE',
-      }),
-
-    getComments: (postId: string) =>
-      request<{ comments: any[] }>(`/blog/comments/comments/${postId}`),
-
-    createComment: (data: { post_id: string; content: string }) =>
-      request<{ comment: any }>('/blog/comments/comments', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }),
-
-    deleteComment: (id: string) =>
-      request<{ success: boolean }>(`/blog/comments/comments/${id}`, {
-        method: 'DELETE',
-      }),
-
-    toggleLike: (data: { post_id: string }) =>
-      request<{ liked: boolean }>('/blog/likes/toggle', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }),
-
-    checkLike: (postId: string) =>
-      request<{ liked: boolean }>(`/blog/likes/check/${postId}`),
   },
 
   modules: {

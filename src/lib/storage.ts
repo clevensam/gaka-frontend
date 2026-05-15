@@ -3,7 +3,7 @@ import { getToken } from './auth';
 export const uploadImage = async (
   file: File, 
   userId: string, 
-  bucket: string = 'blog-images'
+  bucket: string = 'gaka-assets'
 ): Promise<string | null> => {
   try {
     const formData = new FormData();
@@ -35,7 +35,7 @@ export const uploadImage = async (
   }
 };
 
-export const deleteImage = async (path: string, bucket: string = 'blog-images'): Promise<boolean> => {
+export const deleteImage = async (path: string, bucket: string = 'gaka-assets'): Promise<boolean> => {
   try {
     const token = getToken();
     const headers: HeadersInit = { 'Content-Type': 'application/json' };

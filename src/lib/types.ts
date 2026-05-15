@@ -41,26 +41,3 @@ export interface SearchFilters {
   query: string;
   type: ResourceType | 'All';
 }
-
-export interface BlogPost {
-  id: string;
-  author_id: string;
-  title: string;
-  content: string;
-  cover_image?: string;
-  tags: string[];
-  likes_count: number;
-  comments_count: number;
-  created_at: string;
-  updated_at: string;
-  author?: Profile;
-}
-
-export interface BlogComment {
-  id: string;
-  post_id: string;
-  author_id: string;
-  content: string;
-  created_at: string;
-  author?: Profile;
-}

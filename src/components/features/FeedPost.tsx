@@ -29,7 +29,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
   };
 
   const handleShare = () => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(`Check this resource: *${file.title}*\n${window.location.origin}/modules/${file.moduleCode}`)}`, '_blank');
+    window.open(`https://wa.me/?text=${encodeURIComponent(`Check this resource: *${file.title}*\n${file.moduleName || file.moduleCode} — ${window.location.origin}/modules/${file.moduleCode}`)}`, '_blank');
   };
 
   return (
@@ -50,12 +50,10 @@ export const FeedPost: React.FC<FeedPostProps> = ({
           </div>
           <div className="flex flex-col items-start">
             <span className="text-xs font-bold text-slate-900 dark:text-white leading-none">
-              {file.moduleCode}
+              {file.moduleName || file.moduleCode}
             </span>
-            <span className={`text-[9px] font-black uppercase tracking-widest ${
-              isNotes ? 'text-emerald-500' : 'text-amber-500'
-            }`}>
-              {isNotes ? 'Lecture Note' : 'Past Paper'}
+            <span className={`text-[8px] font-medium text-slate-400 dark:text-white/40 leading-none`}>
+              {file.moduleCode}
             </span>
           </div>
         </button>
@@ -97,7 +95,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
 
       {/* Caption */}
       <div className="px-4 pb-1">
-        <span className="text-xs font-bold text-slate-900 dark:text-white mr-2">{file.moduleCode}</span>
+        <span className="text-xs font-bold text-slate-900 dark:text-white mr-2">{file.moduleName || file.moduleCode}</span>
         <span className="text-xs text-slate-700 dark:text-white/80 font-medium">{file.title}</span>
       </div>
 

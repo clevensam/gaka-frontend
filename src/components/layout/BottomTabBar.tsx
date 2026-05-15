@@ -38,14 +38,14 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({ profile, isDark, onT
 
   const handleTabPress = (tab: typeof tabs[0]) => {
     if (tab.id === 'profile') {
-      navigate(profile ? '/about' : '/auth');
+      navigate('/profile');
       return;
     }
     navigate(tab.path!);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const profileActive = location.pathname === '/about' || location.pathname === '/auth';
+  const profileActive = location.pathname === '/about' || location.pathname === '/auth' || location.pathname === '/profile';
 
   return (
     <>

@@ -7,11 +7,10 @@ import { BlogPostView } from './components/blog/BlogPostView';
 import { BlogEditor } from './components/blog/BlogEditor';
 import { BlogPost } from './lib/types';
 import { AuthPage } from './components/auth/AuthPage';
-import { Chatbot } from './components/features/Chatbot';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles } from 'lucide-react';
 import { ChevronRightIcon, CloseIcon } from './components/shared/Icons';
-import { Module, ResourceType, AcademicFile, Profile } from './lib/types';
+import { Module, ResourceType, AcademicFile, Profile as ProfileType } from './lib/types';
 import { Analytics } from '@vercel/analytics/react';
 import { 
   BrowserRouter as Router, 
@@ -29,6 +28,7 @@ import { Modules } from './pages/Modules';
 import { ModuleDetail } from './pages/ModuleDetail';
 import { Saved } from './pages/Saved';
 import { About } from './pages/About';
+import { Profile } from './pages/Profile';
 
 interface AppContentProps {
   isDark: boolean;
@@ -81,7 +81,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     semester: 1
   });
 
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<ProfileType | null>(null);
 
   useEffect(() => {
     localStorage.setItem('gaka-theme', isDark ? 'dark' : 'light');
@@ -464,12 +464,26 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
           } />
           
           <Route path="/saved" element={
-            profile ? (
-              <Saved 
-                savedResources={savedResources}
-                onBrowseClick={() => navigate('/modules')}
-              />
-            ) : <Navigate to="/auth" />
+            <Saved 
+              profile={profile}
+              savedResources={savedResources}
+              onBrowseClick={() => navigate('/modules')}
+              onLogin={handleLogin}
+              onSignup={handleSignup}
+              isDark={isDark}
+            />
+          } />
+          
+          <Route path="/profile" element={
+            <Profile 
+              profile={profile}
+              savedCount={savedResources.length}
+              onLogin={handleLogin}
+              onSignup={handleSignup}
+              onLogout={handleLogout}
+              isDark={isDark}
+              onToggleDark={() => setIsDark(!isDark)}
+            />
           } />
           
           <Route path="/about" element={<About />} />
@@ -612,8 +626,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         </div>
       )}
 
-      <Chatbot modules={modules} onNavigate={navigateTo} />
-      
       {isBlogEditorOpen && profile && (
         <BlogEditor 
           profile={profile} 

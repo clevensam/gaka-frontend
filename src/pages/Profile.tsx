@@ -1,96 +1,84 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { AcademicFile, Profile } from '../lib/types';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Profile as ProfileType } from '../lib/types';
 import { SEO } from '../components/shared/SEO';
-import { FileIcon, DownloadIcon, ViewIcon, ShareIcon } from '../components/shared/Icons';
+import { LogoutIcon, ChevronRightIcon } from '../components/shared/Icons';
 
-interface SavedProps {
-  profile: Profile | null;
-  savedResources: (AcademicFile & { moduleCode: string })[];
-  onBrowseClick: () => void;
+interface ProfilePageProps {
+  profile: ProfileType | null;
+  savedCount: number;
   onLogin: (username: string, pass: string) => Promise<void>;
   onSignup: (username: string, pass: string, name: string, email: string, avatarUrl?: string) => Promise<void>;
+  onLogout: () => void;
   isDark: boolean;
+  onToggleDark: () => void;
 }
 
-export const Saved: React.FC<SavedProps> = ({ profile, savedResources, onBrowseClick, onLogin, onSignup, isDark }) => {
+export const Profile: React.FC<ProfilePageProps> = ({ profile, savedCount, onLogin, onSignup, onLogout, isDark, onToggleDark }) => {
+  const navigate = useNavigate();
+
   if (!profile) {
-    return <InlineAuth onLogin={onLogin} onSignup={onSignup} isDark={isDark} returnTo="saved" />;
+    return <InlineAuth onLogin={onLogin} onSignup={onSignup} isDark={isDark} />;
   }
 
   return (
-    <div className="animate-fade-in pb-8">
-      <SEO title="Saved Resources" />
-      <div className="max-w-ig-container mx-auto">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-8 pt-2">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-4 border-white dark:border-black bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-black text-xl sm:text-2xl shadow-xl mx-auto sm:mx-0">
+    <div className="animate-fade-in max-w-lg mx-auto pt-8 sm:pt-12 pb-8">
+      <SEO title="Profile" />
+
+      <div className="bg-white dark:bg-[#0A0A0A] rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/60 dark:border-white/5 overflow-hidden">
+        {/* Profile Card */}
+        <div className="px-6 sm:px-10 pt-10 pb-6 text-center">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full border-4 border-white dark:border-black bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white font-black text-2xl shadow-xl">
             {profile.full_name?.slice(0, 2).toUpperCase() || profile.username?.slice(0, 2).toUpperCase()}
           </div>
-          <div className="text-center sm:text-left">
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-tight">Saved</h2>
-            <p className="text-sm font-medium text-slate-400 dark:text-white/40">@{profile.username}</p>
-            <p className="text-[9px] font-black uppercase tracking-widest text-emerald-600 mt-1">
-              {savedResources.length} {savedResources.length === 1 ? 'resource' : 'resources'} saved
-            </p>
+          <h2 className="text-2xl font-black text-slate-900 dark:text-white">{profile.full_name || profile.username}</h2>
+          <p className="text-sm font-medium text-slate-400 dark:text-white/40">@{profile.username}</p>
+          <div className="inline-block mt-2 px-3 py-1 bg-emerald-50 dark:bg-emerald-500/10 rounded-full">
+            <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">{profile.role}</span>
           </div>
         </div>
 
-        {savedResources.length === 0 ? (
-          <div className="text-center py-20 bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-200 dark:border-white/5 px-4">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center">
-              <FileIcon className="w-7 h-7 text-slate-300 dark:text-white/20" />
+        {/* Stats */}
+        <div className="flex justify-center gap-10 py-5 border-t border-b border-slate-50 dark:border-white/5 mx-6">
+          <div className="text-center">
+            <span className="block text-lg font-black text-slate-900 dark:text-white">{savedCount}</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-white/30">Saved</span>
+          </div>
+          <div className="text-center">
+            <span className="block text-lg font-black text-slate-900 dark:text-white">{profile.role === 'admin' ? 'Admin' : 'Student'}</span>
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-400 dark:text-white/30">Role</span>
+          </div>
+        </div>
+
+        {/* Menu Items */}
+        <div className="px-6 sm:px-10 py-4 space-y-1">
+          {/* Dark Mode */}
+          <button onClick={onToggleDark} className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-[0.98]">
+            <div className="flex items-center gap-3">
+              <span className="text-lg leading-none">{isDark ? '☀️' : '🌙'}</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
             </div>
-            <h3 className="text-base font-black text-slate-900 dark:text-white mb-2">Nothing saved yet</h3>
-            <p className="text-xs text-slate-400 dark:text-white/30 mb-6 max-w-xs mx-auto font-medium">
-              Save resources by tapping the bookmark icon on any post.
-            </p>
-            <button 
-              onClick={onBrowseClick}
-              className="px-6 py-3 bg-emerald-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md active:scale-95 transition-all"
-            >
-              Browse Resources
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-1 sm:gap-2">
-            {savedResources.map((res) => {
-              const isNotes = res.type === 'Notes';
-              return (
-                <div
-                  key={res.id}
-                  className="group relative aspect-square overflow-hidden bg-slate-50 dark:bg-white/5 rounded-lg sm:rounded-xl transition-all cursor-pointer active:scale-[0.97]"
-                >
-                  <div className={`absolute inset-0 flex flex-col items-center justify-center gap-1.5 transition-all group-hover:scale-105 ${
-                    isNotes ? 'bg-emerald-50 dark:bg-emerald-950' : 'bg-amber-50 dark:bg-amber-950'
-                  }`}>
-                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center ${
-                      isNotes ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400'
-                    }`}>
-                      <FileIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                    </div>
-                    <span className="text-[7px] sm:text-[8px] font-bold text-slate-600 dark:text-white/60 text-center leading-tight line-clamp-2 px-2">
-                      {res.title}
-                    </span>
-                    <span className={`text-[6px] font-medium ${isNotes ? 'text-emerald-500' : 'text-amber-500'}`}>
-                      {res.moduleCode}
-                    </span>
-                  </div>
-                  {/* Hover actions */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                    <a href={res.viewUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 bg-white/20 rounded-lg text-white hover:bg-white/30 transition-all active:scale-90" title="View">
-                      <ViewIcon className="w-4 h-4" />
-                    </a>
-                    <a href={res.downloadUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-2 bg-white/20 rounded-lg text-white hover:bg-white/30 transition-all active:scale-90" title="Download">
-                      <DownloadIcon className="w-4 h-4" />
-                    </a>
-                    <button onClick={(e) => { e.stopPropagation(); window.open(`https://wa.me/?text=${encodeURIComponent(`Check this resource: *${res.title}*`)}`, '_blank'); }} className="p-2 bg-white/20 rounded-lg text-white hover:bg-white/30 transition-all active:scale-90" title="Share">
-                      <ShareIcon className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        )}
+            <ChevronRightIcon className="w-4 h-4 text-slate-300 dark:text-white/20" />
+          </button>
+
+          {/* About */}
+          <button onClick={() => navigate('/about')} className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all active:scale-[0.98]">
+            <div className="flex items-center gap-3">
+              <span className="w-5 h-5 flex items-center justify-center text-sm">ℹ️</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white">About</span>
+            </div>
+            <ChevronRightIcon className="w-4 h-4 text-slate-300 dark:text-white/20" />
+          </button>
+
+          {/* Logout */}
+          <button onClick={onLogout} className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-500/5 transition-all active:scale-[0.98]">
+            <div className="flex items-center gap-3">
+              <LogoutIcon className="w-5 h-5 text-red-500" />
+              <span className="text-sm font-bold text-red-500">Log Out</span>
+            </div>
+            <ChevronRightIcon className="w-4 h-4 text-red-300" />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -101,10 +89,9 @@ interface InlineAuthProps {
   onLogin: (username: string, pass: string) => Promise<void>;
   onSignup: (username: string, pass: string, name: string, email: string, avatarUrl?: string) => Promise<void>;
   isDark: boolean;
-  returnTo: string;
 }
 
-const InlineAuth: React.FC<InlineAuthProps> = ({ onLogin, onSignup, isDark }) => {
+const InlineAuth: React.FC<InlineAuthProps> = ({ onLogin, onSignup }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -144,7 +131,7 @@ const InlineAuth: React.FC<InlineAuthProps> = ({ onLogin, onSignup, isDark }) =>
             G
           </div>
           <h2 className="text-xl font-black text-slate-900 dark:text-white">Welcome to GAKA</h2>
-          <p className="text-[10px] font-medium text-slate-400 mt-1">Sign in to access your saved resources</p>
+          <p className="text-[10px] font-medium text-slate-400 mt-1">Sign in to view your profile</p>
         </div>
 
         <div className="flex mx-6 border dark:border-white/5 bg-slate-50/30 dark:bg-black/10 rounded-xl p-1">

@@ -11,12 +11,7 @@ import { AuthPage } from './components/auth/AuthPage';
 import { Chatbot } from './components/features/Chatbot';
 import { motion, AnimatePresence } from 'motion/react';
 import { Sparkles } from 'lucide-react';
-import { 
-  SearchIcon, BackIcon, FileIcon, DownloadIcon, 
-  ShareIcon, ChevronRightIcon, ViewIcon, PlusIcon, 
-  EditIcon, TrashIcon, BookmarkIcon, BookmarkFilledIcon, 
-  CloseIcon 
-} from './components/shared/Icons';
+import { ChevronRightIcon, CloseIcon } from './components/shared/Icons';
 import { Module, ResourceType, AcademicFile, Profile } from './lib/types';
 import { Analytics } from '@vercel/analytics/react';
 import { 
@@ -24,8 +19,7 @@ import {
   Routes, 
   Route, 
   Navigate, 
-  useNavigate, 
-  useLocation,
+  useNavigate,
   useParams
 } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -44,7 +38,6 @@ interface AppContentProps {
 
 const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [modules, setModules] = useState<Module[]>([]);
   const [recentFiles, setRecentFiles] = useState<(AcademicFile & { moduleCode: string; moduleId: string })[]>([]);
   const [recentBlogPosts, setRecentBlogPosts] = useState<BlogPost[]>([]);
@@ -280,16 +273,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     }
   };
 
-  const handleDeleteResource = async (id: string) => {
-    if (!confirm("Remove permanently?")) return;
-    try {
-      await api.resources.delete(id);
-      await fetchData();
-    } catch (err) {
-      alert("Failed to delete.");
-    }
-  };
-
   const handleSaveModule = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -344,12 +327,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     setIsResourceModalOpen(true);
   };
 
-  const openEditModal = (r: AcademicFile) => {
-    setEditingResource(r);
-    setResourceFormData({ title: r.title, type: r.type, viewUrl: r.viewUrl, downloadUrl: r.downloadUrl });
-    setIsResourceModalOpen(true);
-  };
-
   const toggleSave = (id: string) => {
     setSavedResourceIds(prev => prev.includes(id) ? prev.filter(rid => rid !== id) : [...prev, id]);
   };
@@ -394,98 +371,10 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
     return modules.filter(m => m.name.toLowerCase().includes(q) || m.code.toLowerCase().includes(q));
   }, [modules, searchQuery]);
 
-  const filteredResources = useMemo(() => {
-    if (!selectedModule) return [];
-    return selectedModule.resources.filter(r => filterType === 'All' || r.type === filterType);
-  }, [selectedModule, filterType, modules]);
-
   const savedResources = useMemo(() => {
     const all = modules.flatMap(m => m.resources.map(r => ({ ...r, moduleCode: m.code })));
     return all.filter(r => savedResourceIds.includes(r.id));
   }, [modules, savedResourceIds]);
-
-  const handleShare = (title: string) => {
-    window.open(`https://wa.me/?text=${encodeURIComponent(`Academic Resource: *${title}*\n${window.location.origin}`)}`, '_blank');
-  };
-
-  const ResourceItem: React.FC<{ file: AcademicFile; moduleCode?: string; delay: number }> = ({ file, moduleCode, delay }) => {
-    const isSaved = savedResourceIds.includes(file.id);
-    const [isDownloading, setIsDownloading] = useState(false);
-
-    const onDownload = (e: React.MouseEvent) => {
-      if (file.downloadUrl === '#') e.preventDefault();
-      else {
-        setIsDownloading(true);
-        setTimeout(() => setIsDownloading(false), 3000);
-      }
-    };
-
-    return (
-      <div 
-        className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 sm:p-5 bg-white dark:bg-[#111] border border-slate-100 dark:border-white/5 rounded-2xl sm:rounded-3xl transition-all duration-500 animate-fade-in shadow-sm hover:shadow-md"
-        style={{ animationDelay: `${delay}ms` }}
-      >
-        <div className="flex items-center space-x-3 sm:space-x-5 mb-4 sm:mb-0 min-w-0 flex-1">
-          <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 transition-transform duration-500 group-hover:scale-105 ${
-            file.type === 'Notes' ? 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400'
-          }`}>
-            <FileIcon className="w-5 h-5 sm:w-7 sm:h-7" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center space-x-2 mb-0.5 sm:mb-1">
-              {moduleCode && (
-                <span className="text-[8px] sm:text-[9px] font-black bg-slate-100 dark:bg-black text-slate-500 dark:text-white/40 px-1.5 py-0.5 rounded-md uppercase border dark:border-white/5">
-                  {moduleCode}
-                </span>
-              )}
-              <span className={`text-[8px] sm:text-[9px] font-black uppercase tracking-widest ${file.type === 'Notes' ? 'text-emerald-500' : 'text-teal-500'}`}>
-                {file.type === 'Notes' ? 'Note' : 'Gaka'}
-              </span>
-            </div>
-            <h4 className="font-black text-slate-800 dark:text-white/95 text-xs sm:text-base leading-tight truncate">
-              {file.title}
-            </h4>
-          </div>
-        </div>
-        <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4">
-          <div className="flex items-center bg-slate-100/50 dark:bg-black/40 rounded-xl p-1 border dark:border-white/10 shadow-sm">
-            {profile?.role === 'admin' ? (
-              <>
-                <a href={file.viewUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 text-slate-500 dark:text-white/60 hover:text-emerald-600 active:scale-90 transition-all"><ViewIcon className="w-4 h-4 sm:w-5 sm:h-5" /></a>
-                <div className="w-px h-3.5 bg-slate-200 dark:bg-white/10 mx-1"></div>
-                <button onClick={() => openEditModal(file)} className="p-1.5 text-slate-500 dark:text-white/60 hover:text-emerald-600 active:scale-90 transition-all"><EditIcon className="w-4 h-4 sm:w-5 sm:h-5" /></button>
-                <div className="w-px h-3.5 bg-slate-200 dark:bg-white/10 mx-1"></div>
-                <button onClick={() => handleDeleteResource(file.id)} className="p-1.5 text-slate-500 dark:text-white/60 hover:text-red-500 active:scale-90 transition-all"><TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" /></button>
-              </>
-            ) : (
-              <>
-                {profile && (
-                  <button 
-                    onClick={() => toggleSave(file.id)} 
-                    className={`p-1.5 active:scale-90 transition-all ${isSaved ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-400 dark:text-white/30 hover:text-emerald-600'}`}
-                  >
-                    {isSaved ? <BookmarkFilledIcon className="w-4 h-4 sm:w-5 sm:h-5" /> : <BookmarkIcon className="w-4 h-4 sm:w-5 sm:h-5" />}
-                  </button>
-                )}
-                {!profile && <button onClick={() => handleShare(file.title)} className="p-1.5 text-slate-400 dark:text-white/30 hover:text-emerald-600 active:scale-90 transition-all"><ShareIcon className="w-4 h-4 sm:w-5 sm:h-5" /></button>}
-                <div className="w-px h-3.5 bg-slate-200 dark:bg-white/10 mx-1"></div>
-                <a href={file.viewUrl} target="_blank" rel="noopener noreferrer" className="p-1.5 text-slate-500 dark:text-white/60 hover:text-emerald-600 active:scale-90 transition-all"><ViewIcon className="w-4 h-4 sm:w-5 sm:h-5" /></a>
-              </>
-            )}
-          </div>
-          <a 
-            href={file.downloadUrl} 
-            onClick={onDownload}
-            className={`flex items-center justify-center space-x-1.5 w-28 sm:w-32 h-11 sm:h-12 font-black text-[9px] sm:text-[10px] uppercase tracking-widest rounded-xl shadow-md active:scale-95 transition-all flex-shrink-0 ${
-              isDownloading ? 'bg-slate-800 dark:bg-black text-white' : 'bg-emerald-600 dark:bg-emerald-500 text-white hover:bg-emerald-700'
-            }`}
-          >
-            {isDownloading ? <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin"></div> : <><DownloadIcon className="w-4 h-4" /><span>Download</span></>}
-          </a>
-        </div>
-      </div>
-    );
-  };
 
   if (isLoading) return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-black">
@@ -495,8 +384,6 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       </div>
     </div>
   );
-
-  const currentPath = location.pathname;
 
   return (
     <div className={`min-h-screen flex flex-col transition-colors duration-500 ${isDark ? 'dark bg-black text-white/90' : 'bg-[#fcfdfe] text-slate-900'}`}>

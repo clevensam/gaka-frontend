@@ -81,7 +81,7 @@ export const BottomTabBar: React.FC<BottomTabBarProps> = ({ profile, isDark, onT
       <aside
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300 ease-in-out border-r border-slate-100 dark:border-white/5 bg-white/80 dark:bg-black/80 backdrop-blur-xl"
+        className="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-50 lg:flex lg:flex-col transition-all duration-300 ease-in-out border-r border-slate-100 dark:border-white/5 backdrop-blur-xl"
         style={{ width: hovered ? '240px' : '72px' }}
       >
         <div className="flex flex-col h-full px-2 py-4 overflow-hidden">

@@ -46,7 +46,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-black ${
             isNotes ? 'bg-emerald-500' : 'bg-amber-500'
           }`}>
-            {file.moduleCode?.slice(0, 2)}
+            {(file.moduleName || file.moduleCode)?.slice(0, 2)}
           </div>
           <div className="flex flex-col items-start">
             <span className="text-xs font-bold text-slate-900 dark:text-white leading-none">

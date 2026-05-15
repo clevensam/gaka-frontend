@@ -52,8 +52,10 @@ export const FeedPost: React.FC<FeedPostProps> = ({
             <span className="text-xs font-bold text-slate-900 dark:text-white leading-none">
               {file.moduleName || file.moduleCode}
             </span>
-            <span className={`text-[8px] font-medium text-slate-400 dark:text-white/40 leading-none`}>
-              {file.moduleCode}
+            <span className={`text-[8px] font-medium leading-none ${
+              isNotes ? 'text-emerald-500' : 'text-amber-500'
+            }`}>
+              {isNotes ? 'Lecture' : 'Past Paper'}
             </span>
           </div>
         </button>

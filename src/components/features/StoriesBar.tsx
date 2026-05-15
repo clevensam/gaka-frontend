@@ -1,13 +1,14 @@
 import React from 'react';
-import { FileIcon } from '../shared/Icons';
+import { FileIcon, StoryPlusIcon } from '../shared/Icons';
 import { AcademicFile } from '../../lib/types';
 
 interface StoriesBarProps {
   resources: (AcademicFile & { moduleCode: string; moduleId: string })[];
   onStoryClick: (resourceId: string, moduleId: string) => void;
+  onAddClick?: () => void;
 }
 
-export const StoriesBar: React.FC<StoriesBarProps> = ({ resources, onStoryClick }) => {
+export const StoriesBar: React.FC<StoriesBarProps> = ({ resources, onStoryClick, onAddClick }) => {
   const isNew = (res: any) => {
     if (!res.created_at) return false;
     const diff = Date.now() - new Date(res.created_at).getTime();
@@ -17,6 +18,28 @@ export const StoriesBar: React.FC<StoriesBarProps> = ({ resources, onStoryClick 
   return (
     <div className="w-full overflow-x-auto scrollbar-hide py-3">
       <div className="flex items-center gap-5 px-1 min-w-max">
+        {/* Add Story Circle */}
+        {onAddClick && (
+          <button
+            onClick={onAddClick}
+            className="flex flex-col items-center gap-1.5 flex-shrink-0 active:scale-95 transition-transform"
+          >
+            <div className="relative">
+              <div className="w-16 h-16 sm:w-[68px] sm:h-[68px] rounded-full p-[2.5px] border-2 border-dashed border-slate-300 dark:border-white/20">
+                <div className="w-full h-full rounded-full bg-slate-50 dark:bg-white/5 flex items-center justify-center">
+                  <StoryPlusIcon className="w-7 h-7 sm:w-8 sm:h-8 text-slate-400 dark:text-white/30" />
+                </div>
+              </div>
+            </div>
+            <span className="text-[9px] sm:text-[10px] font-black text-slate-600 dark:text-white/70 max-w-[68px] truncate">
+              Add
+            </span>
+            <span className="text-[7px] sm:text-[8px] font-black uppercase -mt-0.5 text-slate-400">
+              Story
+            </span>
+          </button>
+        )}
+
         {resources.map((res) => {
           const isNotes = res.type === 'Notes';
           const ringClass = isNotes ? 'story-ring-notes' : 'story-ring-pastpaper';

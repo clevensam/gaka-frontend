@@ -23,15 +23,9 @@ export const Home: React.FC<HomeProps> = ({
       {/* Stories Bar */}
       {recentFiles.length > 0 && (
         <div className="mb-6 border-b border-slate-50 dark:border-white/5 pb-4">
-          <StoriesBar resources={recentFiles} onStoryClick={onStoryClick} />
+          <StoriesBar resources={recentFiles} onStoryClick={onStoryClick} onAddClick={onExploreClick} />
         </div>
       )}
-
-      {/* Feed Header */}
-      <div className="max-w-ig-feed mx-auto w-full mb-4 px-1">
-        <h2 className="text-lg font-black text-slate-900 dark:text-white tracking-tight">Recent Uploads</h2>
-        <p className="text-[10px] font-medium text-slate-400 dark:text-white/30">Latest resources added to the repository</p>
-      </div>
 
       {/* Feed Posts */}
       <div className="space-y-4 sm:space-y-6">

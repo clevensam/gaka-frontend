@@ -97,7 +97,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
 
       {/* Caption */}
       <div className="px-4 pb-1">
-        <span className="text-xs font-bold text-slate-900 dark:text-white mr-2">{file.moduleName || file.moduleCode}</span>
+        <span className="text-xs font-bold text-slate-900 dark:text-white mr-2">{file.moduleName}</span>
         <span className="text-xs text-slate-700 dark:text-white/80 font-medium">{file.title}</span>
       </div>
 

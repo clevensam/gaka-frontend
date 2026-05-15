@@ -34,7 +34,7 @@ export const FeedPost: React.FC<FeedPostProps> = ({
 
   return (
     <div 
-      className="bg-white dark:bg-[#0A0A0A] rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden animate-fade-in max-w-ig-feed mx-auto w-full"
+      className="bg-white dark:bg-[#0A0A0A] rounded-2xl border border-slate-100 dark:border-white/5 overflow-hidden animate-fade-in max-w-ig-feed w-full"
       style={{ animationDelay: `${delay}ms` }}
     >
       {/* Header */}

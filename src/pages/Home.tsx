@@ -28,7 +28,7 @@ export const Home: React.FC<HomeProps> = ({
       )}
 
       {/* Feed Posts */}
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-4 sm:space-y-6 max-w-ig-feed w-full">
         {recentFiles.map((f, i) => (
           <FeedPost 
             key={f.id}
@@ -40,7 +40,7 @@ export const Home: React.FC<HomeProps> = ({
           />
         ))}
         {recentFiles.length === 0 && (
-          <div className="text-center py-16 bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-100 dark:border-white/5 max-w-ig-feed mx-auto w-full">
+          <div className="text-center py-16 bg-slate-50/50 dark:bg-white/5 rounded-2xl border-2 border-dashed border-slate-100 dark:border-white/5 max-w-ig-feed w-full">
             <p className="text-slate-400 dark:text-white/20 font-black uppercase tracking-widest text-[10px]">No recent uploads</p>
             <button onClick={onExploreClick} className="mt-4 px-6 py-3 bg-emerald-600 text-white rounded-xl font-black text-[9px] uppercase tracking-widest shadow-md active:scale-95 transition-all">
               Explore Modules

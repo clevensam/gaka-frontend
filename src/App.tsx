@@ -184,7 +184,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         if (mod) setSelectedModule(mod);
       }
 
-      const topRecent = (resourcesResponse.resources || []).slice(0, 8).map((r: any) => {
+      const topRecent = (resourcesResponse.resources || []).map((r: any) => {
         const mod = finalModules.find(m => m.id === r.module_id);
         return {
           id: r.id,

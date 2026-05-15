@@ -397,7 +397,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
         onLogoutClick={handleLogout}
       />
       
-      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-6 pb-24 sm:pt-8 sm:px-6 lg:px-10">
+      <main className="flex-grow container mx-auto max-w-7xl px-4 pt-6 pb-24 sm:pt-8 sm:px-6 lg:px-10 lg:ml-64 lg:pb-6">
         <Routes>
           <Route path="/" element={
             <Home 
@@ -633,7 +633,7 @@ const AppContent: React.FC<AppContentProps> = ({ isDark, setIsDark }) => {
       )}
 
       {/* Bottom Tab Bar - Instagram Style */}
-      <BottomTabBar profile={profile} />
+      <BottomTabBar profile={profile} isDark={isDark} onToggleDark={() => setIsDark(!isDark)} onLogoutClick={handleLogout} />
 
       <Analytics />
 
